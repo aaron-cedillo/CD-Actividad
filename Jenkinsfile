@@ -8,7 +8,6 @@ pipeline {
     stages {
         stage('Clonar Repositorio') {
             steps {
-                // Clona el repositorio desde GitHub
                 git REPO_URL
             }
         }
@@ -16,7 +15,6 @@ pipeline {
         stage('Verificar Archivos') {
             steps {
                 script {
-                    // Verifica que los archivos HTML y CSS existan en sus subdirectorios
                     if (!fileExists('HTML/index.html') || !fileExists('CSS/styles.css')) {
                         error "Archivos HTML o CSS no encontrados."
                     }
@@ -26,17 +24,15 @@ pipeline {
 
         stage('Despliegue en Preproducción') {
             steps {
-                // Simulación de despliegue en preproducción
                 echo 'Desplegando en el entorno de Preproducción...'
             }
         }
 
         stage('Pruebas Automatizadas') {
             steps {
-                // Ejecuta pruebas simples para validar que la página funciona
                 script {
                     echo 'Ejecutando pruebas automatizadas...'
-                    sh 'curl -I http://localhost:8080/HTML/index.html || exit 1'
+                    bat 'curl -I http://127.0.0.1:5500/HTML/index.html || exit 1'
                 }
             }
         }
@@ -44,8 +40,9 @@ pipeline {
         stage('Despliegue en Producción') {
             steps {
                 echo 'Desplegando en el entorno de Producción...'
-                // Copia los archivos al directorio de producción
-                sh 'rsync -avz HTML/index.html CSS/styles.css /var/www/html/'
+                // Copia los archivos al directorio de producción en Windows
+                bat 'copy HTML\\index.html C:\\ruta\\de\\produccion\\'
+                bat 'copy CSS\\styles.css C:\\ruta\\de\\produccion\\'
             }
         }
     }
